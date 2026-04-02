@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CMA Law MCQs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <style>
+        body { -webkit-tap-highlight-color: transparent; font-family: sans-serif; }
+        .correct { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46; font-weight: bold; }
+        .wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
+        .option-btn { transition: all 0.2s; border: 1px solid #e5e7eb; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <header class="bg-blue-900 text-white p-4 sticky top-0 z-10 shadow-md">
+        <h1 class="text-xl font-bold text-center">CMA Paper 5: Law & Ethics</h1>
+        <div class="flex justify-between items-center mt-2 text-sm font-medium px-2">
+            <span id="score" class="bg-blue-800 px-3 py-1 rounded-full">Score: 0</span>
+            <span id="progress">Total Qs: 3</span>
+        </div>
+    </header>
+
+    <main class="flex-grow p-4 pb-24" id="quiz-container"></main>
+
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js');
+            });
+        }
+
+        // Test Data (Sample)
+        const mcqData = [
+            { id: 1, q: "Right to Property is a:", options: ["Fundamental Right", "Fundamental Duty", "Constitutional Right", "None of the above"], ans: 3 },
+            { id: 2, q: "The Constitution of India describes India as:", options: ["A federation", "Quasi-federal", "A Union of states", "None of the above"], ans: 3 },
+            { id: 3, q: "Ethics are the set of moral principles that guide a person’s:", options: ["Behaviour", "Income", "Business", "None of these"], ans: 1 }
+        ];
+
+        let score = 0;
+        let attempted = 0;
+
+        function renderQuestions() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            document.getElementById('progress').innerText = `Attempted: ${attempted}/${mcqData.length}`;
+
+            mcqData.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-gray-200 mb-5";
+                card.innerHTML = `
+                    <p class="font-semibold text-gray-800 mb-4 text-[17px] leading-tight">
+                        <span class="text-blue-600 mr-1">Q${item.id}.</span> ${item.q}
+                    </p>
+                    <div class="flex flex-col gap-3">
+                        ${item.options.map((opt, i) => `
+                            <button onclick="checkAnswer(this, ${i+1}, ${item.ans})" 
+                                    class="option-btn w-full text-left p-4 rounded-xl bg-gray-50 active:scale-95 text-[15px]">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkAnswer(btn, selected, correct) {
+            const parent = btn.parentElement;
+            if (parent.dataset.attempted) return;
+            
+            parent.dataset.attempted = "true";
+            attempted++;
+            const buttons = parent.querySelectorAll('button');
+            
+            // Show correct answer
+            buttons[correct-1].classList.add('correct');
+            
+            if (selected === correct) {
+                score++;
+            } else {
+                btn.classList.add('wrong');
+            }
+            
+            document.getElementById('score').innerText = `Score: ${score}`;
+            document.getElementById('progress').innerText = `Attempted: ${attempted}/${mcqData.length}`;
+        }
+
+        renderQuestions();
+    </script>
+</body>
+</html>
