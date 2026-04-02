@@ -1,0 +1,15 @@
+{
+  "name": "CMA Paper 5 MCQs",
+  "short_name": "CMA Law",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#1e3a8a",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135692.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
